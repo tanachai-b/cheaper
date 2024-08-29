@@ -76,3 +76,15 @@ body {
     }
   }
 }
+
+input[type="number"].hide-spinner {
+  /* Firefox */
+  -moz-appearance: textfield;
+
+  /* Chrome, Safari, Edge, Opera */
+  &::-webkit-outer-spin-button,
+  &::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+}

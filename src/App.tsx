@@ -1,5 +1,6 @@
 import cx from "classnames";
 import { ReactNode, useState } from "react";
+import { Item } from "./components";
 
 export default function App() {
   const [itemPrices, setItemPrices] = useState([0, 0, 0, 0, 0]);
@@ -22,29 +23,30 @@ export default function App() {
 
   return (
     <Container>
-      <div className={cx("text-[50px]")}>Cheapest!</div>
+      <div
+        className={cx(
+          "py-[100px]",
+          "bg-[#00A080]",
+
+          "grid",
+          "place-items-center",
+
+          "text-[50px]",
+          "text-[#ffffff]",
+        )}
+      >
+        Cheapest!
+      </div>
 
       <div
         className={cx(
-          "grid",
-          "grid-cols-6",
-          "gap-[50px]",
+          "flex",
+          "flex-col",
 
-          "place-items-center",
+          "p-[20px]",
+          "gap-[30px]",
         )}
       >
-        <Header>Item</Header>
-
-        <Header>Count</Header>
-
-        <Header>Total Price</Header>
-
-        <Header>Price / Item</Header>
-
-        <Header>Cheapest!</Header>
-
-        <Header>Actions</Header>
-
         <Item isCheapest={cheapestIndex === 0} onChange={(price) => updatePrice(0, price)} />
 
         <Item isCheapest={cheapestIndex === 1} onChange={(price) => updatePrice(1, price)} />
@@ -65,102 +67,24 @@ function Container({ children }: { children: ReactNode }) {
       className={cx(
         "size-full",
 
-        "flex",
-        "flex-col",
-
-        "items-center",
-        "justify-center",
-
-        "p-[20px]",
-        "gap-[100px]",
-
-        "text-[20px]",
+        "grid",
+        "place-items-center",
       )}
     >
-      {children}
+      <div
+        className={cx(
+          "w-full",
+          "max-w-[400px]",
+
+          "flex",
+          "flex-col",
+
+          "text-[15px]",
+          "font-medium",
+        )}
+      >
+        {children}
+      </div>
     </div>
-  );
-}
-
-function Header({ children }: { children: ReactNode }) {
-  return <div className={cx("font-bold")}>{children}</div>;
-}
-
-function Item({
-  isCheapest,
-  onChange,
-}: {
-  isCheapest: boolean;
-  onChange: (itemPrice: number) => void;
-}) {
-  const [itemCount, setItemCount] = useState(1);
-  const [totalPrice, setTotalPrice] = useState(0);
-  const [itemPrice, setItemPrice] = useState(0);
-
-  return (
-    <>
-      <div># 1</div>
-
-      <div className={cx("flex", "flex-row")}>
-        <div>×</div>
-
-        <input
-          className={cx("w-[100px]", "text-center")}
-          type="number"
-          value={itemCount}
-          onChange={(e) => {
-            const itemCount = e.target.valueAsNumber;
-            const itemPrice = totalPrice / itemCount;
-
-            setItemCount(itemCount);
-            setItemPrice(itemPrice);
-
-            onChange(itemPrice);
-          }}
-        />
-      </div>
-
-      <div className={cx("flex", "flex-row")}>
-        <input
-          className={cx("w-[100px]", "text-center")}
-          type="number"
-          value={totalPrice}
-          onChange={(e) => {
-            const totalPrice = e.target.valueAsNumber;
-            const itemPrice = totalPrice / itemCount;
-
-            setTotalPrice(totalPrice);
-            setItemPrice(itemPrice);
-
-            onChange(itemPrice);
-          }}
-        />
-
-        <div>THB</div>
-      </div>
-
-      <div className={cx("flex", "flex-row")}>
-        <input
-          className={cx("w-[100px]", "text-center")}
-          type="number"
-          value={itemPrice}
-          onChange={(e) => {
-            const itemPrice = e.target.valueAsNumber;
-            const totalPrice = itemPrice * itemCount;
-
-            setItemPrice(itemPrice);
-            setTotalPrice(totalPrice);
-
-            onChange(itemPrice);
-          }}
-        />
-
-        <div>THB</div>
-      </div>
-
-      <div>{isCheapest && "X"}</div>
-
-      <button>Remove</button>
-    </>
   );
 }
