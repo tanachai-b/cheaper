@@ -24,7 +24,6 @@ body {
     height: 7px;
   }
 
-  *,
   .dark-scrollbar {
     &::-webkit-scrollbar-track {
       background: #ffffff00;
@@ -44,6 +43,7 @@ body {
     }
   }
 
+  *,
   .light-scrollbar {
     &::-webkit-scrollbar-track {
       background: #00000000;

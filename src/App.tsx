@@ -1,21 +1,15 @@
-import cx from "classnames";
-import { ReactNode, useState } from "react";
-import { Item } from "./components";
+import { useState } from "react";
+import { Body, Container, Header, Price } from "./components";
 
 export default function App() {
   const [itemPrices, setItemPrices] = useState([0, 0, 0, 0, 0]);
 
-  const cheapestIndex = itemPrices.reduce<{ price: number; index: number } | undefined>(
-    (cheapest, price, index) =>
-      price === 0
-        ? cheapest
-        : cheapest == null
-        ? { price, index }
-        : price < cheapest.price
-        ? { price, index }
-        : cheapest,
-    undefined,
-  )?.index;
+  const cheapestPrice = itemPrices.reduce<number | undefined>((cheapest, price) => {
+    if (price === 0) return cheapest;
+    if (cheapest == null) return price;
+    if (price < cheapest) return price;
+    return cheapest;
+  }, undefined);
 
   function updatePrice(index: number, value: number) {
     setItemPrices(itemPrices.map((v, i) => (i === index ? value : v)));
@@ -23,68 +17,34 @@ export default function App() {
 
   return (
     <Container>
-      <div
-        className={cx(
-          "py-[100px]",
-          "bg-[#00A080]",
+      <Header />
 
-          "grid",
-          "place-items-center",
+      <Body>
+        <Price
+          isCheapest={itemPrices[0] === cheapestPrice}
+          onChange={(price) => updatePrice(0, price)}
+        />
 
-          "text-[50px]",
-          "text-[#ffffff]",
-        )}
-      >
-        Cheapest!
-      </div>
+        <Price
+          isCheapest={itemPrices[1] === cheapestPrice}
+          onChange={(price) => updatePrice(1, price)}
+        />
 
-      <div
-        className={cx(
-          "flex",
-          "flex-col",
+        <Price
+          isCheapest={itemPrices[2] === cheapestPrice}
+          onChange={(price) => updatePrice(2, price)}
+        />
 
-          "p-[20px]",
-          "gap-[30px]",
-        )}
-      >
-        <Item isCheapest={cheapestIndex === 0} onChange={(price) => updatePrice(0, price)} />
+        <Price
+          isCheapest={itemPrices[3] === cheapestPrice}
+          onChange={(price) => updatePrice(3, price)}
+        />
 
-        <Item isCheapest={cheapestIndex === 1} onChange={(price) => updatePrice(1, price)} />
-
-        <Item isCheapest={cheapestIndex === 2} onChange={(price) => updatePrice(2, price)} />
-
-        <Item isCheapest={cheapestIndex === 3} onChange={(price) => updatePrice(3, price)} />
-
-        <Item isCheapest={cheapestIndex === 4} onChange={(price) => updatePrice(4, price)} />
-      </div>
+        <Price
+          isCheapest={itemPrices[4] === cheapestPrice}
+          onChange={(price) => updatePrice(4, price)}
+        />
+      </Body>
     </Container>
-  );
-}
-
-function Container({ children }: { children: ReactNode }) {
-  return (
-    <div
-      className={cx(
-        "size-full",
-
-        "grid",
-        "place-items-center",
-      )}
-    >
-      <div
-        className={cx(
-          "w-full",
-          "max-w-[400px]",
-
-          "flex",
-          "flex-col",
-
-          "text-[15px]",
-          "font-medium",
-        )}
-      >
-        {children}
-      </div>
-    </div>
   );
 }
