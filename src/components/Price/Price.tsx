@@ -1,5 +1,5 @@
 import cx from "classnames";
-import { ReactNode, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { Icon } from "src/common-components";
 import { NumberField } from "./NumberField";
 import { NumberText } from "./NumberText";
@@ -31,8 +31,27 @@ export function Price({
     onChange(itemPrice);
   };
 
+  const [width, setWidth] = useState(0);
+
+  useEffect(() => {
+    onResize();
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  });
+
+  function onResize() {
+    setWidth(window.innerWidth);
+  }
+
   return (
-    <div className={cx("flex", "flex-col", "gap-[10px]")}>
+    <div
+      className={cx(
+        "flex",
+        width < 600 ? ["flex-col"] : ["flex-row", "justify-center"],
+
+        "gap-[10px]",
+      )}
+    >
       <div
         className={cx(
           "flex",
@@ -70,6 +89,7 @@ export function Price({
           "items-center",
 
           "gap-[10px]",
+
           "justify-end",
         )}
       >
@@ -81,7 +101,6 @@ export function Price({
           decimalDigits={2}
           defaultValue={0}
           value={itemPrice}
-          //
         />
 
         <CheckIcon isCheapest={isCheapest} />
@@ -91,7 +110,7 @@ export function Price({
 }
 
 function PlainText({ children }: { children: ReactNode }) {
-  return <div className={cx("text-[30px]", "text-[#00000080]", "font-light")}>{children}</div>;
+  return <div className={cx("text-[20px]", "text-[#00000040]")}>{children}</div>;
 }
 
 function CheckIcon({ isCheapest }: { isCheapest: boolean }) {

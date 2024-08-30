@@ -1,5 +1,6 @@
 import cx from "classnames";
 import { ChangeEvent, ReactNode, useRef, useState } from "react";
+import { Resizable } from "src/common-components";
 import { formatNumber } from "src/common-functions";
 
 export function NumberField({
@@ -65,9 +66,13 @@ export function NumberField({
     }
   }
 
+  const [width, setWidth] = useState(0);
+
   return (
     <div
       className={cx(
+        "w-[150px]",
+
         "flex",
         "flex-col",
 
@@ -104,27 +109,31 @@ export function NumberField({
           "gap-[5px]",
         )}
       >
-        <input
-          ref={ref}
-          className={cx(
-            "w-[80px]",
-            "h-[30px]",
+        <Resizable className={cx("flex-auto")} onResize={({ width }) => setWidth(width)}>
+          <input
+            ref={ref}
+            className={cx(
+              "w-full",
+              "h-[30px]",
 
-            "bg-transparent",
-            "outline-none",
+              "bg-transparent",
+              "outline-none",
 
-            "text-right",
+              "text-right",
 
-            "placeholder:text-[#00000020]",
+              "placeholder:text-[#00000020]",
 
-            initialValue === defaultValue ? "text-[#00000040]" : "text-[#000000]",
-          )}
-          style={{ fontSize: `${Math.min(30 * (4.5 / (value.length || hint.length || 1)), 30)}px` }}
-          placeholder={hint}
-          inputMode="decimal"
-          value={value}
-          onChange={handleChange}
-        />
+              initialValue === defaultValue ? "text-[#00000040]" : "text-[#000000]",
+            )}
+            style={{
+              fontSize: `${Math.min(1.7 * (width / (value.length || hint.length || 1)), 30)}px`,
+            }}
+            placeholder={hint}
+            inputMode="decimal"
+            value={value}
+            onChange={handleChange}
+          />
+        </Resizable>
 
         <div className={cx("text-[12px]", "text-[#00000080]")}>{unit}</div>
       </div>

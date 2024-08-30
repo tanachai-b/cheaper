@@ -1,5 +1,6 @@
 import cx from "classnames";
-import { ReactNode, useRef } from "react";
+import { ReactNode, useRef, useState } from "react";
+import { Resizable } from "src/common-components";
 import { formatNumber } from "src/common-functions";
 
 export function NumberText({
@@ -17,9 +18,15 @@ export function NumberText({
 }) {
   const ref = useRef<HTMLInputElement>(null);
 
+  const formattedValue = formatNumber(value, decimalDigits);
+
+  const [width, setWidth] = useState(0);
+
   return (
     <div
       className={cx(
+        "w-[150px]",
+
         "flex",
         "flex-row",
 
@@ -37,7 +44,16 @@ export function NumberText({
         )}
       />
 
-      <div className={cx("flex", "flex-col", "gap-[10px]")}>
+      <div
+        className={cx(
+          "flex-auto",
+
+          "flex",
+          "flex-col",
+
+          "gap-[10px]",
+        )}
+      >
         <div className={cx("text-[12px]", "text-[#00000080]")}>{label}</div>
 
         <div
@@ -49,17 +65,28 @@ export function NumberText({
             "gap-[5px]",
           )}
         >
-          <div
-            ref={ref}
-            className={cx(
-              "text-[30px]",
-              "text-right",
-
-              value === defaultValue ? "text-[#00000040]" : "text-[#000000]",
-            )}
+          <Resizable
+            className={cx("flex-auto", "h-[30px]", "grid")}
+            onResize={({ width }) => setWidth(width)}
           >
-            {formatNumber(value, decimalDigits)}
-          </div>
+            <div
+              ref={ref}
+              className={cx(
+                "grid",
+                "items-center",
+                "justify-end",
+
+                "overflow-hidden",
+
+                value === defaultValue ? "text-[#00000040]" : "text-[#000000]",
+              )}
+              style={{
+                fontSize: `${Math.min(1.7 * (width / (formattedValue.length || 1)), 30)}px`,
+              }}
+            >
+              {formattedValue}
+            </div>
+          </Resizable>
 
           <div className={cx("text-[12px]", "text-[#00000080]")}>{unit}</div>
         </div>
