@@ -1,14 +1,19 @@
 import cx from "classnames";
 import { ReactNode, useRef } from "react";
+import { formatNumber } from "src/common-functions";
 
 export function NumberText({
   label,
-  value,
   unit,
+  decimalDigits,
+  defaultValue,
+  value,
 }: {
   label: ReactNode;
-  value?: string | number;
   unit: ReactNode;
+  decimalDigits: number;
+  defaultValue: number;
+  value: number;
 }) {
   const ref = useRef<HTMLInputElement>(null);
 
@@ -24,7 +29,13 @@ export function NumberText({
         "leading-none",
       )}
     >
-      <div className={cx("bg-[#00a080]", "w-[2px]")} />
+      <div
+        className={cx(
+          "w-[2px]",
+
+          value === defaultValue ? "bg-[#00000040]" : "bg-[#00a080]",
+        )}
+      />
 
       <div className={cx("flex", "flex-col", "gap-[10px]")}>
         <div className={cx("text-[12px]", "text-[#00000080]")}>{label}</div>
@@ -38,8 +49,16 @@ export function NumberText({
             "gap-[5px]",
           )}
         >
-          <div ref={ref} className={cx("text-[30px]", "text-right")}>
-            {value}
+          <div
+            ref={ref}
+            className={cx(
+              "text-[30px]",
+              "text-right",
+
+              value === defaultValue ? "text-[#00000040]" : "text-[#000000]",
+            )}
+          >
+            {formatNumber(value, decimalDigits)}
           </div>
 
           <div className={cx("text-[12px]", "text-[#00000080]")}>{unit}</div>

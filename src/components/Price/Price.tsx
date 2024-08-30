@@ -1,5 +1,5 @@
 import cx from "classnames";
-import { ChangeEvent, ReactNode, useState } from "react";
+import { ReactNode, useState } from "react";
 import { Icon } from "src/common-components";
 import { NumberField } from "./NumberField";
 import { NumberText } from "./NumberText";
@@ -11,12 +11,11 @@ export function Price({
   isCheapest: boolean;
   onChange: (itemPrice: number) => void;
 }) {
-  const [itemCount, setItemCount] = useState(1);
   const [totalPrice, setTotalPrice] = useState(0);
+  const [itemCount, setItemCount] = useState(1);
   const [itemPrice, setItemPrice] = useState(0);
 
-  const onChangeTotalPrice = (e: ChangeEvent<HTMLInputElement>) => {
-    const totalPrice = e.target.valueAsNumber;
+  const onChangeTotalPrice = (totalPrice: number) => {
     const itemPrice = totalPrice / itemCount;
 
     setTotalPrice(totalPrice);
@@ -24,8 +23,7 @@ export function Price({
     onChange(itemPrice);
   };
 
-  const onChangeItemCount = (e: ChangeEvent<HTMLInputElement>) => {
-    const itemCount = e.target.valueAsNumber;
+  const onChangeItemCount = (itemCount: number) => {
     const itemPrice = totalPrice / itemCount;
 
     setItemCount(itemCount);
@@ -46,8 +44,10 @@ export function Price({
       >
         <NumberField
           label="Total Price"
-          value={totalPrice}
           unit="THB"
+          decimalDigits={2}
+          defaultValue={0}
+          initialValue={totalPrice}
           onChange={onChangeTotalPrice}
         />
 
@@ -55,8 +55,10 @@ export function Price({
 
         <NumberField
           label="Item Count"
-          value={itemCount}
           unit="item/s"
+          decimalDigits={0}
+          defaultValue={1}
+          initialValue={itemCount}
           onChange={onChangeItemCount}
         />
       </div>
@@ -75,8 +77,10 @@ export function Price({
 
         <NumberText
           label="Price per Item"
-          value={itemPrice.toFixed(2)}
           unit="THB"
+          decimalDigits={2}
+          defaultValue={0}
+          value={itemPrice}
           //
         />
 

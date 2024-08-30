@@ -1,20 +1,71 @@
 import cx from "classnames";
-import { ChangeEventHandler, ReactNode, useRef, useState } from "react";
+import { ChangeEvent, ReactNode, useRef, useState } from "react";
+import { formatNumber } from "src/common-functions";
 
 export function NumberField({
   label,
-  value,
   unit,
+  decimalDigits,
+  defaultValue,
+  initialValue,
   onChange,
 }: {
   label: ReactNode;
-  value?: string | number;
   unit: ReactNode;
-  onChange: ChangeEventHandler<HTMLInputElement>;
+  decimalDigits: number;
+  defaultValue: number;
+  initialValue: number;
+  onChange: (value: number) => void;
 }) {
   const ref = useRef<HTMLInputElement>(null);
 
   const [isFocus, setIsFocus] = useState(false);
+
+  const [hint, setHint] = useState(`${formatNumber(initialValue, decimalDigits)}`);
+  const [value, setValue] = useState(`${formatNumber(initialValue, decimalDigits)}`);
+  const [numValue, setNumValue] = useState(initialValue);
+
+  function onClick() {
+    if (!isFocus) {
+      setHint(`${numValue}`);
+      setValue("");
+      ref.current?.select();
+    }
+  }
+
+  function onFocus() {
+    setTimeout(() => setIsFocus(true), 0);
+  }
+
+  function onBlur() {
+    setIsFocus(false);
+
+    setValue(
+      numValue.toLocaleString("en-US", {
+        minimumFractionDigits: decimalDigits,
+        maximumFractionDigits: decimalDigits,
+      }),
+    );
+  }
+
+  function handleChange(e: ChangeEvent<HTMLInputElement>) {
+    const value = e.target.value;
+
+    setValue(value);
+
+    if (value.length === 0) {
+      setNumValue(0);
+      onChange(0);
+      return;
+    }
+
+    const numValue = parseFloat(value);
+
+    if (!isNaN(numValue)) {
+      setNumValue(numValue);
+      onChange(numValue);
+    }
+  }
 
   return (
     <div
@@ -40,9 +91,9 @@ export function NumberField({
             ]
           : ["bg-[#00000008]"],
       )}
-      onClick={() => !isFocus && ref.current?.select()}
-      onFocus={() => setTimeout(() => setIsFocus(true), 0)}
-      onBlur={() => setIsFocus(false)}
+      onClick={onClick}
+      onFocus={onFocus}
+      onBlur={onBlur}
     >
       <div className={cx("text-[12px]", "text-[#00000080]")}>{label}</div>
 
@@ -62,15 +113,19 @@ export function NumberField({
             "h-[30px]",
 
             "bg-transparent",
-            "hide-spinner",
             "outline-none",
 
-            "text-[30px]",
             "text-right",
+
+            "placeholder:text-[#00000020]",
+
+            initialValue === defaultValue ? "text-[#00000040]" : "text-[#000000]",
           )}
-          type="number"
+          style={{ fontSize: `${Math.min(30 * (4.5 / (value.length || hint.length || 1)), 30)}px` }}
+          placeholder={hint}
+          inputMode="decimal"
           value={value}
-          onChange={onChange}
+          onChange={handleChange}
         />
 
         <div className={cx("text-[12px]", "text-[#00000080]")}>{unit}</div>
