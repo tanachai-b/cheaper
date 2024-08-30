@@ -26,14 +26,12 @@ export function NumberField({
   const [numValue, setNumValue] = useState(initialValue);
 
   function onClick() {
-    if (!isFocus) {
-      setHint(`${numValue}`);
-      setValue("");
-      ref.current?.select();
-    }
+    if (!isFocus) ref.current?.select();
   }
 
   function onFocus() {
+    setHint(`${numValue}`);
+    setValue("");
     setTimeout(() => setIsFocus(true), 0);
   }
 
