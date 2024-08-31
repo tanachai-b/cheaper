@@ -13,19 +13,19 @@
   "start_url": "/",
   "id": "/",
   "display": "standalone",
-  "theme_color": "#ffc000",
-  "background_color": "#ffc000",
+  "theme_color": "#00a080",
+  "background_color": "#ffffff",
 
   "description": "Help you compare prices easily.",
   "screenshots": [
     {
-      "src": "/meta-image.png",
+      "src": "/manifest-image.png",
       "type": "image/png",
       "sizes": "1200x628",
       "form_factor": "wide"
     },
     {
-      "src": "/meta-image.png",
+      "src": "/manifest-image.png",
       "type": "image/png",
       "sizes": "1200x628",
       "form_factor": "narrow"
