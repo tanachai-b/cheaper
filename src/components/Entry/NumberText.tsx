@@ -1,7 +1,7 @@
 import cx from "classnames";
-import { ReactNode, useRef, useState } from "react";
-import { Resizable } from "src/common-components";
+import { ReactNode, useRef } from "react";
 import { formatNumber } from "src/common-functions";
+import { useDivSize } from "src/common-hooks";
 
 export function NumberText({
   label,
@@ -107,28 +107,27 @@ function Label({ children }: { children: ReactNode }) {
 function Value({ isChanged, formattedValue }: { isChanged: boolean; formattedValue: string }) {
   const ref = useRef<HTMLInputElement>(null);
 
-  const [width, setWidth] = useState(0);
+  const { width } = useDivSize(ref);
 
   return (
-    <Resizable
-      className={cx("flex-auto", "h-[30px]", "grid")}
-      onResize={({ width }) => setWidth(width)}
+    <div
+      ref={ref}
+      className={cx(
+        "flex-auto",
+
+        "h-[30px]",
+
+        "grid",
+        "items-center",
+        "justify-end",
+
+        "overflow-hidden",
+
+        isChanged ? "text-[#000000]" : "text-[#00000040]",
+      )}
+      style={{ fontSize: `${Math.min(1.7 * (width / (formattedValue.length || 1)), 30)}px` }}
     >
-      <div
-        ref={ref}
-        className={cx(
-          "grid",
-          "items-center",
-          "justify-end",
-
-          "overflow-hidden",
-
-          isChanged ? "text-[#000000]" : "text-[#00000040]",
-        )}
-        style={{ fontSize: `${Math.min(1.7 * (width / (formattedValue.length || 1)), 30)}px` }}
-      >
-        {formattedValue}
-      </div>
-    </Resizable>
+      {formattedValue}
+    </div>
   );
 }

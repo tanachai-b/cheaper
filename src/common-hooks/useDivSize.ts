@@ -10,8 +10,10 @@ export function useDivSize(ref: RefObject<HTMLDivElement>) {
 
   useEffect(() => {
     if (ref.current == null) return;
+
     const resizeObserver = new ResizeObserver(onResize);
     resizeObserver.observe(ref.current);
+
     return () => resizeObserver.disconnect();
   }, [ref.current]);
 

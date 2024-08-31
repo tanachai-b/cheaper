@@ -1,13 +1,14 @@
 import cx from "classnames";
-import { MouseEventHandler, ReactNode, useEffect, useState } from "react";
+import { MouseEventHandler, ReactNode } from "react";
 import { Icon } from "src/common-components";
+import { useWindowScroll } from "src/common-hooks";
 
 export function Header({
   isEditing,
   selectionStatus,
   onClickEdit,
   onClickSettings,
-  onClickCancel,
+  onClickBack,
   onClickSelectAll,
   onClickDelete,
 }: {
@@ -15,21 +16,13 @@ export function Header({
   selectionStatus: "none" | "some" | "all";
   onClickEdit: MouseEventHandler<HTMLButtonElement>;
   onClickSettings: MouseEventHandler<HTMLButtonElement>;
-  onClickCancel: MouseEventHandler<HTMLButtonElement>;
+  onClickBack: MouseEventHandler<HTMLButtonElement>;
   onClickSelectAll: MouseEventHandler<HTMLButtonElement>;
   onClickDelete: MouseEventHandler<HTMLButtonElement>;
 }) {
-  const [scale, setScale] = useState(0);
+  const { scrollY } = useWindowScroll();
 
-  useEffect(() => {
-    onScroll();
-    window.addEventListener("scroll", onScroll);
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
-
-  function onScroll() {
-    setScale(1 - Math.min(window.scrollY / (300 - 50), 1));
-  }
+  const scale = 1 - Math.min(scrollY / (300 - 50), 1);
 
   return (
     <Container scale={scale}>
@@ -44,7 +37,7 @@ export function Header({
       </ToolBar>
 
       <ToolBar isVisible={isEditing}>
-        <IconButton icon="arrow_back" onClick={onClickCancel} />
+        <IconButton icon="arrow_back" onClick={onClickBack} />
 
         <IconButton
           icon={

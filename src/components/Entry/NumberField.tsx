@@ -9,8 +9,8 @@ import {
   useRef,
   useState,
 } from "react";
-import { Resizable } from "src/common-components";
 import { formatNumber } from "src/common-functions";
+import { useDivSize } from "src/common-hooks";
 
 export function NumberField({
   label,
@@ -165,30 +165,30 @@ function Input({
   isChanged: boolean;
   handleChange: ChangeEventHandler<HTMLInputElement>;
 }) {
-  const [width, setWidth] = useState(0);
+  const { width } = useDivSize(inputRef);
 
   return (
-    <Resizable className={cx("flex-auto")} onResize={({ width }) => setWidth(width)}>
-      <input
-        ref={inputRef}
-        className={cx(
-          "w-full",
-          "h-[30px]",
+    <input
+      ref={inputRef}
+      className={cx(
+        "flex-auto",
 
-          "bg-transparent",
-          "outline-none",
+        "w-full",
+        "h-[30px]",
 
-          "text-right",
+        "bg-transparent",
+        "outline-none",
 
-          "placeholder:text-[#00000020]",
+        "text-right",
 
-          isChanged ? "text-[#000000]" : "text-[#00000040]",
-        )}
-        style={{ fontSize: `${Math.min(1.7 * (width / (value.length || 1)), 30)}px` }}
-        inputMode="decimal"
-        value={value}
-        onChange={handleChange}
-      />
-    </Resizable>
+        "placeholder:text-[#00000020]",
+
+        isChanged ? "text-[#000000]" : "text-[#00000040]",
+      )}
+      style={{ fontSize: `${Math.min(1.7 * (width / (value.length || 1)), 30)}px` }}
+      inputMode="decimal"
+      value={value}
+      onChange={handleChange}
+    />
   );
 }
