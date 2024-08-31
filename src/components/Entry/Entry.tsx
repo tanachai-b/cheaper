@@ -1,14 +1,23 @@
 import cx from "classnames";
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode, useRef, useState } from "react";
 import { Icon } from "src/common-components";
+import { useDivSize, useWindowSize } from "src/common-hooks";
 import { NumberField } from "./NumberField";
 import { NumberText } from "./NumberText";
 
 export function Entry({
+  isEditing,
+  isSelected,
+  isVisible,
   isCheapest,
+  onSelect,
   onChangeItemPrice,
 }: {
+  isEditing: boolean;
+  isSelected: boolean;
+  isVisible: boolean;
   isCheapest: boolean;
+  onSelect: (isSelected: boolean) => void;
   onChangeItemPrice: (itemPrice: number) => void;
 }) {
   const [totalPrice, setTotalPrice] = useState(0);
@@ -31,67 +40,164 @@ export function Entry({
     onChangeItemPrice(itemPrice);
   };
 
-  const [width, setWidth] = useState(0);
-
-  useEffect(() => {
-    onResize();
-    window.addEventListener("resize", onResize);
-    return () => window.removeEventListener("resize", onResize);
-  });
-
-  function onResize() {
-    setWidth(window.innerWidth);
-  }
+  const { width } = useWindowSize();
 
   return (
-    <Container isVertical={width < 600}>
-      <Row>
-        <NumberField
-          label="Total Price"
-          unit="THB"
-          decimalDigits={2}
-          defaultValue={0}
-          initialValue={totalPrice}
-          onChange={onChangeTotalPrice}
-        />
+    <Container isVisible={isVisible}>
+      <Checkbox isEditing={isEditing} isSelected={isSelected} onSelect={onSelect} />
 
-        <PlainText>÷</PlainText>
+      <Content isVertical={width < 600} isEditing={isEditing}>
+        <Row>
+          <NumberField
+            label="Total Price"
+            unit="THB"
+            decimalDigits={2}
+            defaultValue={0}
+            initialValue={totalPrice}
+            onChange={onChangeTotalPrice}
+          />
 
-        <NumberField
-          label="Item Count"
-          unit="item/s"
-          decimalDigits={0}
-          defaultValue={1}
-          initialValue={itemCount}
-          onChange={onChangeItemCount}
-        />
-      </Row>
+          <PlainText>÷</PlainText>
 
-      <Row className={cx("justify-end")}>
-        <PlainText>=</PlainText>
+          <NumberField
+            label="Item Count"
+            unit="item/s"
+            decimalDigits={0}
+            defaultValue={1}
+            initialValue={itemCount}
+            onChange={onChangeItemCount}
+          />
+        </Row>
 
-        <NumberText
-          label="Price per Item"
-          unit="THB"
-          decimalDigits={2}
-          defaultValue={0}
-          value={itemPrice}
-        />
+        <Row className={cx("justify-end")}>
+          <PlainText>=</PlainText>
 
-        <CheckIcon isCheapest={isCheapest} />
-      </Row>
+          <NumberText
+            label="Price per Item"
+            unit="THB"
+            decimalDigits={2}
+            defaultValue={0}
+            value={itemPrice}
+          />
+
+          <CheckIcon isCheapest={isCheapest} />
+        </Row>
+      </Content>
     </Container>
   );
 }
 
-function Container({ isVertical, children }: { isVertical: boolean; children: ReactNode }) {
+function Container({ isVisible, children }: { isVisible: boolean; children: ReactNode }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const { height } = useDivSize(ref);
+
   return (
     <div
       className={cx(
+        "grid",
+        "items-start",
+        "justify-items-center",
+
+        isVisible ? "visible" : "invisible",
+
+        "transition-all",
+        "overflow-clip",
+      )}
+      style={{ height: `${isVisible ? height : 0}px` }}
+    >
+      <div
+        ref={ref}
+        className={cx(
+          "w-full",
+          "min-w-0",
+          "max-w-[600px]",
+
+          "flex",
+          "flex-row",
+        )}
+      >
+        {children}
+      </div>
+    </div>
+  );
+}
+
+function Checkbox({
+  isEditing,
+  isSelected,
+  onSelect,
+}: {
+  isEditing: boolean;
+  isSelected: boolean;
+  onSelect: (isSelected: boolean) => void;
+}) {
+  return (
+    <div
+      className={cx(
+        "flex-none",
+        isEditing ? "w-[50px]" : "w-0",
+
+        "grid",
+        "place-items-center",
+
+        "overflow-clip",
+
+        "transition-all",
+      )}
+    >
+      <button
+        className={cx(
+          "grid",
+          "place-items-center",
+
+          "rounded-full",
+
+          "bg-[#00000000]",
+          "transition-all",
+          "duration-[500ms]",
+
+          "p-[10px]",
+
+          "text-[30px]",
+          isSelected ? "text-[#e00000]" : "text-[#00000010]",
+
+          "active:bg-[#00000020]",
+          "active:duration-0",
+        )}
+        disabled={!isEditing}
+        onClick={() => onSelect(!isSelected)}
+      >
+        {isSelected && <Icon icon="check_circle" />}
+
+        {!isSelected && <Icon icon="circle" />}
+      </button>
+    </div>
+  );
+}
+
+function Content({
+  isVertical,
+  isEditing,
+  children,
+}: {
+  isVertical: boolean;
+  isEditing: boolean;
+  children: ReactNode;
+}) {
+  return (
+    <div
+      className={cx(
+        "flex-auto",
+        "min-w-0",
+
         "flex",
         isVertical ? ["flex-col"] : ["flex-row", "justify-center"],
 
+        "p-[20px]",
         "gap-[10px]",
+
+        isEditing && ["opacity-[30%]", "pointer-events-none"],
+        "transition-all",
       )}
     >
       {children}

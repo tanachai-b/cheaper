@@ -1,49 +1,122 @@
+import cx from "classnames";
 import { useState } from "react";
 import { Body, Container, Entry, Header } from "./components";
 
-export default function App() {
-  const [itemPrices, setItemPrices] = useState([0, 0, 0, 0, 0]);
+type EntryData = {
+  key: string;
+  itemPrice: number;
+  isSelected: boolean;
+  isVisible: boolean;
+};
 
-  const cheapestPrice = itemPrices.reduce<number | undefined>((cheapest, price) => {
-    if (price === 0) return cheapest;
-    if (cheapest == null) return price;
-    if (price < cheapest) return price;
+function getBlankEntry() {
+  const key = Math.floor(Math.random() * 36 ** 4).toString(36);
+
+  const newEntry: EntryData = { key, itemPrice: 0, isSelected: false, isVisible: true };
+
+  return newEntry;
+}
+
+export default function App() {
+  const [entries, setEntries] = useState<EntryData[]>([getBlankEntry()]);
+
+  const cheapestPrice = entries.reduce<number | undefined>((cheapest, price) => {
+    if (price.itemPrice === 0) return cheapest;
+    if (cheapest == null) return price.itemPrice;
+    if (price.itemPrice < cheapest) return price.itemPrice;
     return cheapest;
   }, undefined);
 
-  function updatePrice(index: number, value: number) {
-    setItemPrices(itemPrices.map((v, i) => (i === index ? value : v)));
+  const setPrice = (key: string, itemPrice: number): void => {
+    const updatedEntry = entries.map(
+      (value): EntryData => (value.key === key ? { ...value, itemPrice } : value),
+    );
+
+    const lastEntryIsZero = updatedEntry.slice(-1)[0].itemPrice === 0;
+
+    const addedNewEntry = !lastEntryIsZero ? [...updatedEntry, getBlankEntry()] : updatedEntry;
+
+    setEntries(addedNewEntry);
+  };
+
+  function select(key: string, isSelected: boolean): void {
+    const updatedEntry = entries.map(
+      (value): EntryData => (value.key === key ? { ...value, isSelected } : value),
+    );
+    setEntries(updatedEntry);
   }
+
+  function selectAll(isSelected: boolean): void {
+    const updatedEntry = entries.map((value): EntryData => ({ ...value, isSelected }));
+    setEntries(updatedEntry);
+  }
+
+  function deleteSelection(): void {
+    const updatedEntry = entries.map(
+      (value): EntryData => (value.isSelected ? { ...value, isVisible: false } : value),
+    );
+    setEntries(updatedEntry);
+
+    setTimeout(
+      () =>
+        setEntries((entries) => {
+          const removedEntries = entries.filter((value) => value.isVisible);
+
+          const lastEntryIsZero =
+            removedEntries.length > 0 && removedEntries.slice(-1)[0].itemPrice === 0;
+
+          const addedNewEntry =
+            removedEntries.length === 0 || !lastEntryIsZero
+              ? [...removedEntries, getBlankEntry()]
+              : removedEntries;
+
+          return addedNewEntry;
+        }),
+      150,
+    );
+
+    setIsEditing(false);
+  }
+
+  const [isEditing, setIsEditing] = useState(false);
+
+  const selectionCount = entries.reduce(
+    (count, entry) => (entry.isSelected ? count + 1 : count),
+    0,
+  );
+
+  const selectionStatus =
+    selectionCount === 0 ? "none" : selectionCount < entries.length ? "some" : "all";
 
   return (
     <Container>
-      <Header />
+      <Header
+        isEditing={isEditing}
+        selectionStatus={selectionStatus}
+        onClickEdit={() => setIsEditing(true)}
+        onClickSettings={() => {}}
+        onClickCancel={() => {
+          setIsEditing(false);
+          selectAll(false);
+        }}
+        onClickSelectAll={() => selectAll(selectionStatus !== "all")}
+        onClickDelete={deleteSelection}
+      />
 
       <Body>
-        <Entry
-          isCheapest={itemPrices[0] === cheapestPrice}
-          onChangeItemPrice={(price) => updatePrice(0, price)}
-        />
+        {entries.map((entry) => (
+          <Entry
+            key={entry.key}
+            isEditing={isEditing}
+            isSelected={entry.isSelected}
+            isVisible={entry.isVisible}
+            isCheapest={entry.itemPrice === cheapestPrice}
+            onSelect={(isSelected) => select(entry.key, isSelected)}
+            onChangeItemPrice={(itemPrice) => setPrice(entry.key, itemPrice)}
+          />
+        ))}
 
-        <Entry
-          isCheapest={itemPrices[1] === cheapestPrice}
-          onChangeItemPrice={(price) => updatePrice(1, price)}
-        />
-
-        <Entry
-          isCheapest={itemPrices[2] === cheapestPrice}
-          onChangeItemPrice={(price) => updatePrice(2, price)}
-        />
-
-        <Entry
-          isCheapest={itemPrices[3] === cheapestPrice}
-          onChangeItemPrice={(price) => updatePrice(3, price)}
-        />
-
-        <Entry
-          isCheapest={itemPrices[4] === cheapestPrice}
-          onChangeItemPrice={(price) => updatePrice(4, price)}
-        />
+        <div className={cx("h-[50vh]")}></div>
       </Body>
     </Container>
   );
