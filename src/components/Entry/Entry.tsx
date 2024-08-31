@@ -4,12 +4,12 @@ import { Icon } from "src/common-components";
 import { NumberField } from "./NumberField";
 import { NumberText } from "./NumberText";
 
-export function Price({
+export function Entry({
   isCheapest,
-  onChange,
+  onChangeItemPrice,
 }: {
   isCheapest: boolean;
-  onChange: (itemPrice: number) => void;
+  onChangeItemPrice: (itemPrice: number) => void;
 }) {
   const [totalPrice, setTotalPrice] = useState(0);
   const [itemCount, setItemCount] = useState(1);
@@ -20,7 +20,7 @@ export function Price({
 
     setTotalPrice(totalPrice);
     setItemPrice(itemPrice);
-    onChange(itemPrice);
+    onChangeItemPrice(itemPrice);
   };
 
   const onChangeItemCount = (itemCount: number) => {
@@ -28,7 +28,7 @@ export function Price({
 
     setItemCount(itemCount);
     setItemPrice(itemPrice);
-    onChange(itemPrice);
+    onChangeItemPrice(itemPrice);
   };
 
   const [width, setWidth] = useState(0);
@@ -44,23 +44,8 @@ export function Price({
   }
 
   return (
-    <div
-      className={cx(
-        "flex",
-        width < 600 ? ["flex-col"] : ["flex-row", "justify-center"],
-
-        "gap-[10px]",
-      )}
-    >
-      <div
-        className={cx(
-          "flex",
-          "flex-row",
-          "items-center",
-
-          "gap-[10px]",
-        )}
-      >
+    <Container isVertical={width < 600}>
+      <Row>
         <NumberField
           label="Total Price"
           unit="THB"
@@ -80,19 +65,9 @@ export function Price({
           initialValue={itemCount}
           onChange={onChangeItemCount}
         />
-      </div>
+      </Row>
 
-      <div
-        className={cx(
-          "flex",
-          "flex-row",
-          "items-center",
-
-          "gap-[10px]",
-
-          "justify-end",
-        )}
-      >
+      <Row className={cx("justify-end")}>
         <PlainText>=</PlainText>
 
         <NumberText
@@ -104,7 +79,40 @@ export function Price({
         />
 
         <CheckIcon isCheapest={isCheapest} />
-      </div>
+      </Row>
+    </Container>
+  );
+}
+
+function Container({ isVertical, children }: { isVertical: boolean; children: ReactNode }) {
+  return (
+    <div
+      className={cx(
+        "flex",
+        isVertical ? ["flex-col"] : ["flex-row", "justify-center"],
+
+        "gap-[10px]",
+      )}
+    >
+      {children}
+    </div>
+  );
+}
+
+function Row({ className, children }: { className?: string; children: ReactNode }) {
+  return (
+    <div
+      className={cx(
+        "flex",
+        "flex-row",
+        "items-center",
+
+        "gap-[10px]",
+
+        className,
+      )}
+    >
+      {children}
     </div>
   );
 }

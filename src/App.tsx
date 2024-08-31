@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Body, Container, Header, Price } from "./components";
+import { Body, Container, Entry, Header } from "./components";
 
 export default function App() {
   const [itemPrices, setItemPrices] = useState([0, 0, 0, 0, 0]);
@@ -20,29 +20,29 @@ export default function App() {
       <Header />
 
       <Body>
-        <Price
+        <Entry
           isCheapest={itemPrices[0] === cheapestPrice}
-          onChange={(price) => updatePrice(0, price)}
+          onChangeItemPrice={(price) => updatePrice(0, price)}
         />
 
-        <Price
+        <Entry
           isCheapest={itemPrices[1] === cheapestPrice}
-          onChange={(price) => updatePrice(1, price)}
+          onChangeItemPrice={(price) => updatePrice(1, price)}
         />
 
-        <Price
+        <Entry
           isCheapest={itemPrices[2] === cheapestPrice}
-          onChange={(price) => updatePrice(2, price)}
+          onChangeItemPrice={(price) => updatePrice(2, price)}
         />
 
-        <Price
+        <Entry
           isCheapest={itemPrices[3] === cheapestPrice}
-          onChange={(price) => updatePrice(3, price)}
+          onChangeItemPrice={(price) => updatePrice(3, price)}
         />
 
-        <Price
+        <Entry
           isCheapest={itemPrices[4] === cheapestPrice}
-          onChange={(price) => updatePrice(4, price)}
+          onChangeItemPrice={(price) => updatePrice(4, price)}
         />
       </Body>
     </Container>
