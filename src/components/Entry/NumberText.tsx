@@ -20,7 +20,7 @@ export function NumberText({
 
   return (
     <Container>
-      <Line isChanged={value !== defaultValue} />
+      <Line />
 
       <Content>
         <Label>{label}</Label>
@@ -55,18 +55,8 @@ function Container({ children }: { children: ReactNode }) {
   );
 }
 
-function Line({ isChanged }: { isChanged: boolean }) {
-  return (
-    <div
-      className={cx(
-        "flex-none",
-
-        "w-[2px]",
-
-        isChanged ? "bg-[#00a080]" : "bg-[#00000040]",
-      )}
-    />
-  );
+function Line() {
+  return <div className={cx("flex-none", "w-[2px]", "bg-[#ffffff20]")} />;
 }
 
 function Content({ children }: { children: ReactNode }) {
@@ -103,7 +93,7 @@ function Data({ children }: { children: ReactNode }) {
 }
 
 function Label({ children }: { children: ReactNode }) {
-  return <div className={cx("flex-none", "text-[12px]", "text-[#00000080]")}>{children}</div>;
+  return <div className={cx("flex-none", "text-[12px]", "text-[#ffffff80]")}>{children}</div>;
 }
 
 function Value({ isChanged, formattedValue }: { isChanged: boolean; formattedValue: string }) {
@@ -126,7 +116,7 @@ function Value({ isChanged, formattedValue }: { isChanged: boolean; formattedVal
 
           "overflow-hidden",
 
-          isChanged ? "text-[#000000]" : "text-[#00000040]",
+          isChanged ? "text-[#ffffff]" : "text-[#ffffff40]",
           "transition-all",
         )}
         style={{ fontSize: `${Math.min(30 * (width / hiddenWidth), 30)}px` }}

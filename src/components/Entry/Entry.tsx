@@ -151,16 +151,16 @@ function Checkbox({
 
           "rounded-full",
 
-          "bg-[#00000000]",
+          "bg-[#ffffff00]",
           "transition-all",
           "duration-[500ms]",
 
           "p-[10px]",
 
           "text-[30px]",
-          isSelected ? "text-[#e00000]" : "text-[#00000010]",
+          isSelected ? "text-[#ffffff]" : "text-[#ffffff80]",
 
-          "active:bg-[#00000020]",
+          "active:bg-[#ffffff40]",
           "active:duration-0",
         )}
         disabled={!isEditing}
@@ -168,7 +168,7 @@ function Checkbox({
       >
         {isSelected && <Icon icon="check_circle" />}
 
-        {!isSelected && <Icon icon="circle" />}
+        {!isSelected && <Icon icon="circle" fill={false} />}
       </button>
     </div>
   );
@@ -224,7 +224,7 @@ function Row({ className, children }: { className?: string; children: ReactNode 
 }
 
 function PlainText({ children }: { children: ReactNode }) {
-  return <div className={cx("flex-none", "text-[20px]", "text-[#00000040]")}>{children}</div>;
+  return <div className={cx("flex-none", "text-[20px]", "text-[#ffffff80]")}>{children}</div>;
 }
 
 function CheckIcon({ isCheapest }: { isCheapest: boolean }) {
@@ -236,7 +236,7 @@ function CheckIcon({ isCheapest }: { isCheapest: boolean }) {
         "grid",
         "text-[25px]",
 
-        isCheapest ? "text-[#00a080]" : "text-[#00000008]",
+        isCheapest ? "text-[#ffffff]" : "text-[#ffffff20]",
       )}
     >
       <Icon icon="check_circle" />

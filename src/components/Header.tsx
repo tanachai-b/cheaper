@@ -7,7 +7,6 @@ export function Header({
   isEditing,
   selectionStatus,
   onClickEdit,
-  onClickSettings,
   onClickBack,
   onClickSelectAll,
   onClickDelete,
@@ -15,7 +14,6 @@ export function Header({
   isEditing: boolean;
   selectionStatus: "none" | "some" | "all";
   onClickEdit: MouseEventHandler<HTMLButtonElement>;
-  onClickSettings: MouseEventHandler<HTMLButtonElement>;
   onClickBack: MouseEventHandler<HTMLButtonElement>;
   onClickSelectAll: MouseEventHandler<HTMLButtonElement>;
   onClickDelete: MouseEventHandler<HTMLButtonElement>;
@@ -32,8 +30,6 @@ export function Header({
         <IconButton icon="edit" onClick={onClickEdit} />
 
         <div className={cx("flex-auto")} />
-
-        {/* <IconButton icon="settings" onClick={onClickSettings} /> */}
       </ToolBar>
 
       <ToolBar isVisible={isEditing}>
@@ -78,7 +74,8 @@ function Container({ scale, children }: { scale: number; children: ReactNode }) 
         className={cx(
           "visible",
 
-          "bg-[#00a080]",
+          "bg-[#00a08080]",
+          "backdrop-blur-[5px]",
 
           "grid",
           "relative",
@@ -165,8 +162,7 @@ function IconButton({
         "text-[25px]",
         "text-[#ffffff]",
 
-        "active:bg-[#fffffff0]",
-        "active:text-[#00a080]",
+        "active:bg-[#ffffff40]",
         "active:duration-0",
       )}
       onClick={onClick}

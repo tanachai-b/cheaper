@@ -23,7 +23,6 @@ export default function App() {
         isEditing={isEditing}
         selectionStatus={selectionStatus}
         onClickEdit={() => setIsEditing(true)}
-        onClickSettings={() => {}}
         onClickBack={() => {
           setIsEditing(false);
           selectAll(false);

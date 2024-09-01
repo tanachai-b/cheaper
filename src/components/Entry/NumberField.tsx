@@ -119,12 +119,12 @@ function Container({
           ? [
               "outline",
               "outline-[1px]",
-              "outline-[#00000020]",
+              "outline-[#ffffff40]",
 
-              "bg-[#00000000]",
+              "bg-[#ffffff00]",
               //
             ]
-          : ["bg-[#00000008]"],
+          : ["bg-[#ffffff10]"],
       )}
       onClick={onClick}
       onFocus={onFocus}
@@ -136,7 +136,7 @@ function Container({
 }
 
 function Label({ children }: { children: ReactNode }) {
-  return <div className={cx("flex-none", "text-[12px]", "text-[#00000080]")}>{children}</div>;
+  return <div className={cx("flex-none", "text-[12px]", "text-[#ffffff80]")}>{children}</div>;
 }
 
 function Data({ children }: { children: ReactNode }) {
@@ -184,9 +184,7 @@ function Input({
 
           "text-right",
 
-          "placeholder:text-[#00000020]",
-
-          isChanged ? "text-[#000000]" : "text-[#00000040]",
+          isChanged ? "text-[#ffffff]" : "text-[#ffffff40]",
           "transition-all",
         )}
         style={{ fontSize: `${Math.min(30 * (width / hiddenWidth), 30)}px` }}
