@@ -7,6 +7,7 @@ export function Header({
   isEditing,
   selectionStatus,
   onClickEdit,
+  onClickSettings,
   onClickBack,
   onClickSelectAll,
   onClickDelete,
@@ -14,6 +15,7 @@ export function Header({
   isEditing: boolean;
   selectionStatus: "none" | "some" | "all";
   onClickEdit: MouseEventHandler<HTMLButtonElement>;
+  onClickSettings: MouseEventHandler<HTMLButtonElement>;
   onClickBack: MouseEventHandler<HTMLButtonElement>;
   onClickSelectAll: MouseEventHandler<HTMLButtonElement>;
   onClickDelete: MouseEventHandler<HTMLButtonElement>;
@@ -30,6 +32,8 @@ export function Header({
         <IconButton icon="edit" onClick={onClickEdit} />
 
         <div className={cx("flex-auto")} />
+
+        <IconButton icon="settings" onClick={onClickSettings} />
       </ToolBar>
 
       <ToolBar isVisible={isEditing}>

@@ -6,36 +6,28 @@ import {
   MouseEventHandler,
   ReactNode,
   RefObject,
-  useEffect,
   useRef,
   useState,
 } from "react";
-import { formatNumber } from "src/common-functions";
 import { useDivSize } from "src/common-hooks";
 
-export function NumberField({
+export function TextField({
   label,
-  unit,
-  decimalDigits,
   defaultValue,
   initialValue,
   onChange,
 }: {
   label: ReactNode;
-  unit: ReactNode;
-  decimalDigits: number;
-  defaultValue: number;
-  initialValue: number;
-  onChange: (value: number) => void;
+  defaultValue: string;
+  initialValue: string;
+  onChange: (value: string) => void;
 }) {
   const inputRef = useRef<HTMLInputElement>(null);
 
   const [isFocus, setIsFocus] = useState(false);
 
-  const [value, setValue] = useState(`${formatNumber(initialValue, decimalDigits)}`);
-  const [numValue, setNumValue] = useState(initialValue);
-
-  useEffect(() => setValue(formatNumber(numValue, decimalDigits)), [decimalDigits]);
+  const [value, setValue] = useState(initialValue);
+  const [output, setOutput] = useState(initialValue);
 
   function onClick() {
     inputRef.current?.focus();
@@ -43,13 +35,12 @@ export function NumberField({
 
   function onFocus() {
     setIsFocus(true);
-    setValue(`${numValue}`);
     setTimeout(() => inputRef.current?.select(), 0);
   }
 
   function onBlur() {
     setIsFocus(false);
-    setValue(formatNumber(numValue, decimalDigits));
+    setValue(output);
   }
 
   function handleChange(e: ChangeEvent<HTMLInputElement>) {
@@ -57,17 +48,12 @@ export function NumberField({
 
     setValue(value);
 
-    if (value.length === 0) {
-      setNumValue(defaultValue);
+    if (value.length > 0) {
+      setOutput(value.trim().substring(0, 3).toUpperCase());
+      onChange(value.trim().substring(0, 3).toUpperCase());
+    } else {
+      setOutput(defaultValue);
       onChange(defaultValue);
-      return;
-    }
-
-    const numValue = parseFloat(value);
-
-    if (!isNaN(numValue)) {
-      setNumValue(numValue);
-      onChange(numValue);
     }
   }
 
@@ -79,11 +65,9 @@ export function NumberField({
         <Input
           inputRef={inputRef}
           value={value}
-          isChanged={numValue !== defaultValue}
+          isChanged={output !== defaultValue}
           handleChange={handleChange}
         />
-
-        <Label>{unit}</Label>
       </Data>
     </Container>
   );
@@ -105,9 +89,6 @@ function Container({
   return (
     <div
       className={cx(
-        "flex-auto",
-        "basis-1",
-
         "flex",
         "flex-col",
 
@@ -185,13 +166,12 @@ function Input({
           "bg-transparent",
           "outline-none",
 
-          "text-right",
+          // "text-right",
 
           isChanged ? "text-[#ffffff]" : "text-[#ffffff40]",
           "transition-all",
         )}
         style={{ fontSize: `${Math.min(30 * (width / hiddenWidth), 30)}px` }}
-        inputMode="decimal"
         value={value}
         onChange={handleChange}
         onKeyUp={(e) => {

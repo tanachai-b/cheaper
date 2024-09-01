@@ -6,19 +6,23 @@ import { NumberField } from "./NumberField";
 import { NumberText } from "./NumberText";
 
 export function Entry({
+  currency,
+  decimalDigits,
   isEditing,
   isSelected,
   isVisible,
   isCheapest,
-  onSelect,
   onChangeItemPrice,
+  onSelect,
 }: {
+  currency: string;
+  decimalDigits: number;
   isEditing: boolean;
   isSelected: boolean;
   isVisible: boolean;
   isCheapest: boolean;
-  onSelect: (isSelected: boolean) => void;
   onChangeItemPrice: (itemPrice: number) => void;
+  onSelect: (isSelected: boolean) => void;
 }) {
   const [totalPrice, setTotalPrice] = useState(0);
   const [itemCount, setItemCount] = useState(1);
@@ -50,8 +54,8 @@ export function Entry({
         <Row className={cx("basis-[67%]")}>
           <NumberField
             label="Total Price"
-            unit="THB"
-            decimalDigits={2}
+            unit={currency}
+            decimalDigits={decimalDigits}
             defaultValue={0}
             initialValue={totalPrice}
             onChange={onChangeTotalPrice}
@@ -74,8 +78,8 @@ export function Entry({
 
           <NumberText
             label="Price per Item"
-            unit="THB"
-            decimalDigits={2}
+            unit={currency}
+            decimalDigits={decimalDigits}
             defaultValue={0}
             value={itemPrice}
           />

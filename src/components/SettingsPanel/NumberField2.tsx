@@ -6,25 +6,24 @@ import {
   MouseEventHandler,
   ReactNode,
   RefObject,
-  useEffect,
   useRef,
   useState,
 } from "react";
 import { formatNumber } from "src/common-functions";
 import { useDivSize } from "src/common-hooks";
 
-export function NumberField({
+export function NumberField2({
   label,
   unit,
-  decimalDigits,
-  defaultValue,
+  decimalDigits = 0,
+  defaultValue = 0,
   initialValue,
   onChange,
 }: {
   label: ReactNode;
-  unit: ReactNode;
-  decimalDigits: number;
-  defaultValue: number;
+  unit?: ReactNode;
+  decimalDigits?: number;
+  defaultValue?: number;
   initialValue: number;
   onChange: (value: number) => void;
 }) {
@@ -34,8 +33,6 @@ export function NumberField({
 
   const [value, setValue] = useState(`${formatNumber(initialValue, decimalDigits)}`);
   const [numValue, setNumValue] = useState(initialValue);
-
-  useEffect(() => setValue(formatNumber(numValue, decimalDigits)), [decimalDigits]);
 
   function onClick() {
     inputRef.current?.focus();
@@ -65,10 +62,12 @@ export function NumberField({
 
     const numValue = parseFloat(value);
 
-    if (!isNaN(numValue)) {
-      setNumValue(numValue);
-      onChange(numValue);
-    }
+    if (isNaN(numValue)) return;
+
+    const clamped = Math.min(Math.max(numValue, 0), 100);
+
+    setNumValue(clamped);
+    onChange(clamped);
   }
 
   return (
@@ -83,7 +82,7 @@ export function NumberField({
           handleChange={handleChange}
         />
 
-        <Label>{unit}</Label>
+        {unit != null && <Label>{unit}</Label>}
       </Data>
     </Container>
   );
@@ -105,9 +104,6 @@ function Container({
   return (
     <div
       className={cx(
-        "flex-auto",
-        "basis-1",
-
         "flex",
         "flex-col",
 
@@ -185,7 +181,7 @@ function Input({
           "bg-transparent",
           "outline-none",
 
-          "text-right",
+          // "text-right",
 
           isChanged ? "text-[#ffffff]" : "text-[#ffffff40]",
           "transition-all",
