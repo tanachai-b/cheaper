@@ -102,7 +102,7 @@ function Title({ scale, children }: { scale: number; children: ReactNode }) {
         "tracking-[0.25ch]",
         "font-bold",
 
-        "overflow-clip",
+        "overflow-hidden",
       )}
       style={{
         fontSize: `${20 + (40 - 20) * scale}px`,
@@ -126,7 +126,7 @@ function ToolBar({ isVisible, children }: { isVisible: boolean; children: ReactN
         "absolute",
 
         "w-full",
-        "max-w-[600px]",
+        "max-w-[1000px]",
         "h-[50px]",
 
         "bottom-0",

@@ -102,7 +102,8 @@ function Container({
   return (
     <div
       className={cx(
-        "w-[150px]",
+        "flex-auto",
+        "basis-1",
 
         "flex",
         "flex-col",
@@ -135,7 +136,7 @@ function Container({
 }
 
 function Label({ children }: { children: ReactNode }) {
-  return <div className={cx("text-[12px]", "text-[#00000080]")}>{children}</div>;
+  return <div className={cx("flex-none", "text-[12px]", "text-[#00000080]")}>{children}</div>;
 }
 
 function Data({ children }: { children: ReactNode }) {
@@ -167,28 +168,38 @@ function Input({
 }) {
   const { width } = useDivSize(inputRef);
 
+  const hiddenRef = useRef<HTMLDivElement>(null);
+  const { width: hiddenWidth } = useDivSize(hiddenRef);
+
   return (
-    <input
-      ref={inputRef}
-      className={cx(
-        "flex-auto",
+    <div className={cx("flex-auto", "grid")}>
+      <input
+        ref={inputRef}
+        className={cx(
+          "w-full",
+          "h-[30px]",
 
-        "w-full",
-        "h-[30px]",
+          "bg-transparent",
+          "outline-none",
 
-        "bg-transparent",
-        "outline-none",
+          "text-right",
 
-        "text-right",
+          "placeholder:text-[#00000020]",
 
-        "placeholder:text-[#00000020]",
+          isChanged ? "text-[#000000]" : "text-[#00000040]",
+          "transition-all",
+        )}
+        style={{ fontSize: `${Math.min(30 * (width / hiddenWidth), 30)}px` }}
+        inputMode="decimal"
+        value={value}
+        onChange={handleChange}
+      />
 
-        isChanged ? "text-[#000000]" : "text-[#00000040]",
-      )}
-      style={{ fontSize: `${Math.min(1.7 * (width / (value.length || 1)), 30)}px` }}
-      inputMode="decimal"
-      value={value}
-      onChange={handleChange}
-    />
+      <div className={cx("w-0", "overflow-clip", "relative")}>
+        <div ref={hiddenRef} className={cx("absolute", "text-[30px]", "whitespace-pre")}>
+          {value}
+        </div>
+      </div>
+    </div>
   );
 }

@@ -47,7 +47,7 @@ export function Entry({
       <Checkbox isEditing={isEditing} isSelected={isSelected} onSelect={onSelect} />
 
       <Content isVertical={width < 600} isEditing={isEditing}>
-        <Row>
+        <Row className={cx("basis-[67%]")}>
           <NumberField
             label="Total Price"
             unit="THB"
@@ -69,7 +69,7 @@ export function Entry({
           />
         </Row>
 
-        <Row className={cx("justify-end")}>
+        <Row className={cx("basis-[calc(33%_+_50px)]")}>
           <PlainText>=</PlainText>
 
           <NumberText
@@ -109,8 +109,7 @@ function Container({ isVisible, children }: { isVisible: boolean; children: Reac
         ref={ref}
         className={cx(
           "w-full",
-          "min-w-0",
-          "max-w-[600px]",
+          "max-w-[1000px]",
 
           "flex",
           "flex-row",
@@ -188,7 +187,6 @@ function Content({
     <div
       className={cx(
         "flex-auto",
-        "min-w-0",
 
         "flex",
         isVertical ? ["flex-col"] : ["flex-row", "justify-center"],
@@ -209,6 +207,8 @@ function Row({ className, children }: { className?: string; children: ReactNode 
   return (
     <div
       className={cx(
+        "flex-auto",
+
         "flex",
         "flex-row",
         "items-center",
@@ -224,13 +224,15 @@ function Row({ className, children }: { className?: string; children: ReactNode 
 }
 
 function PlainText({ children }: { children: ReactNode }) {
-  return <div className={cx("text-[20px]", "text-[#00000040]")}>{children}</div>;
+  return <div className={cx("flex-none", "text-[20px]", "text-[#00000040]")}>{children}</div>;
 }
 
 function CheckIcon({ isCheapest }: { isCheapest: boolean }) {
   return (
     <div
       className={cx(
+        "flex-none",
+
         "grid",
         "text-[25px]",
 
