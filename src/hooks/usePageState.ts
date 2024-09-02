@@ -40,10 +40,10 @@ export function usePageState() {
 
   return {
     isEditing,
-    isShowSettings,
-
     startEditing,
     stopEditing,
+
+    isShowSettings,
     openSettings,
     closeSettings,
   };

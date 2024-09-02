@@ -7,11 +7,15 @@ import { TextField } from "./TextField";
 export function SettingsPanel({
   isVisible,
   onClose,
+  currency,
+  decimalDigits,
   onSetCurrency,
   onSetDecimalDigits,
 }: {
   isVisible: boolean;
   onClose: () => void;
+  currency: string;
+  decimalDigits: number;
   onSetCurrency: (currency: string) => void;
   onSetDecimalDigits: (decimalDigits: number) => void;
 }) {
@@ -30,14 +34,14 @@ export function SettingsPanel({
           <TextField
             label="Currency"
             defaultValue="THB"
-            initialValue="THB"
+            initialValue={currency}
             onChange={onSetCurrency}
           />
 
           <NumberField2
             label="Decimal Digits"
             defaultValue={2}
-            initialValue={2}
+            initialValue={decimalDigits}
             onChange={onSetDecimalDigits}
           />
         </Body>

@@ -1,5 +1,5 @@
 import cx from "classnames";
-import { ReactNode, useRef, useState } from "react";
+import { ReactNode, useRef } from "react";
 import { Icon } from "src/common-components";
 import { useDivSize, useWindowSize } from "src/common-hooks";
 import { NumberField } from "./NumberField";
@@ -11,8 +11,11 @@ export function Entry({
   isEditing,
   isSelected,
   isVisible,
+  totalPrice,
+  itemCount,
+  itemPrice,
   isCheapest,
-  onChangeItemPrice,
+  onChange,
   onSelect,
 }: {
   currency: string;
@@ -20,28 +23,19 @@ export function Entry({
   isEditing: boolean;
   isSelected: boolean;
   isVisible: boolean;
+  totalPrice: number;
+  itemCount: number;
+  itemPrice: number;
   isCheapest: boolean;
-  onChangeItemPrice: (itemPrice: number) => void;
+  onChange: (prices: { totalPrice: number; itemCount: number }) => void;
   onSelect: (isSelected: boolean) => void;
 }) {
-  const [totalPrice, setTotalPrice] = useState(0);
-  const [itemCount, setItemCount] = useState(1);
-  const [itemPrice, setItemPrice] = useState(0);
-
   const onChangeTotalPrice = (totalPrice: number) => {
-    const itemPrice = totalPrice / itemCount;
-
-    setTotalPrice(totalPrice);
-    setItemPrice(itemPrice);
-    onChangeItemPrice(itemPrice);
+    onChange({ totalPrice, itemCount });
   };
 
   const onChangeItemCount = (itemCount: number) => {
-    const itemPrice = totalPrice / itemCount;
-
-    setItemCount(itemCount);
-    setItemPrice(itemPrice);
-    onChangeItemPrice(itemPrice);
+    onChange({ totalPrice, itemCount });
   };
 
   const { width } = useWindowSize();
