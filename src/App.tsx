@@ -1,9 +1,19 @@
 import cx from "classnames";
 import { useState } from "react";
 import { Body, Container, Entry, Header, SettingsPanel } from "./components";
-import { useEntries } from "./hooks";
+import { useEntries, usePageState } from "./hooks";
 
 export default function App() {
+  const {
+    isEditing,
+    isShowSettings,
+
+    startEditing,
+    stopEditing,
+    openSettings,
+    closeSettings,
+  } = usePageState();
+
   const {
     entries,
     cheapestPrice,
@@ -18,26 +28,23 @@ export default function App() {
   const [currency, setCurrency] = useState("THB");
   const [decimalDigits, setDecimalDigits] = useState(2);
 
-  const [isEditing, setIsEditing] = useState(false);
-  const [isShowSettings, setIsShowSettings] = useState(false);
-
   return (
     <>
       <Container>
         <Header
           isEditing={isEditing}
           selectionStatus={selectionStatus}
-          onClickEdit={() => setIsEditing(true)}
-          onClickSettings={() => setIsShowSettings(true)}
+          onClickEdit={startEditing}
           onClickBack={() => {
-            setIsEditing(false);
             selectAll(false);
+            stopEditing();
           }}
           onClickSelectAll={() => selectAll(selectionStatus !== "all")}
           onClickDelete={() => {
             deleteSelection();
-            setIsEditing(false);
+            stopEditing();
           }}
+          onClickSettings={openSettings}
         />
 
         <Body>
@@ -61,7 +68,7 @@ export default function App() {
 
       <SettingsPanel
         isVisible={isShowSettings}
-        onClose={() => setIsShowSettings(false)}
+        onClose={closeSettings}
         onSetCurrency={setCurrency}
         onSetDecimalDigits={setDecimalDigits}
       />

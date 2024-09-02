@@ -86,6 +86,7 @@ export function useEntries() {
     entries,
     cheapestPrice,
     selectionStatus,
+
     setPrice,
     select,
     selectAll,
