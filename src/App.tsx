@@ -81,7 +81,7 @@ export default function App() {
             />
           ))}
 
-          <div className={cx("h-[50vh]")}></div>
+          <div className={cx("h-[50vh]")} />
         </Body>
       </Container>
 

@@ -2,6 +2,7 @@ import cx from "classnames";
 import { MouseEventHandler, ReactNode } from "react";
 import { Icon } from "src/common-components";
 import { NumberField2 } from "./NumberField2";
+import { TBunLogo } from "./TBunLogo";
 import { TextField } from "./TextField";
 
 export function SettingsPanel({
@@ -47,6 +48,8 @@ export function SettingsPanel({
         </Body>
 
         <div className={cx("flex-auto")} onClick={onClose} />
+
+        <TBunLogo />
       </Panel>
     </Container>
   );
